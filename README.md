@@ -1,4 +1,5 @@
-_**garble** is a python tool that takes javascript obfuscation to the extreme._
+_**garble** is a python3 tool that takes javascript obfuscation to the extreme._
+SAME AS THE ORIGINAL JUST FOR PYTHON3
 
 ###Why should I use garble ?
 - You want to double , even tripple the file size of your javascript.(optional)
@@ -6,9 +7,9 @@ _**garble** is a python tool that takes javascript obfuscation to the extreme._
 
 ##How to use.
 
-###_**garble**_ depends on python 2.7 and slimit.
+###_**garble**_ depends on python 3.X and slimit.
 
-1. install python 2.7
+1. install python 3.X
 2. install slimit
 3. install unidecode (This is helps standardize input from various encodings Latin-1,UTF-16,etc)
 
