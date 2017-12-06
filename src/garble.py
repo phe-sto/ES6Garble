@@ -7,7 +7,7 @@ import unidecode
 
 
 if len(sys.argv) < 3:
-    print "please specify an input and output and if you would like to use compression."
+    print ("please specify an input and output and if you would like to use compression.")
     quit()
 inputPath = sys.argv[1]
 outputPath = sys.argv[2]
@@ -113,7 +113,7 @@ symbols={
 
 fileContents = open(inputPath, 'r').read()
 
-fileContentsUnicoded = unicode(fileContents,'utf-8')
+fileContentsUnicoded = str(fileContents)
 fileContentsUnunicoded = unidecode.unidecode(fileContentsUnicoded)
 
 replacedReserved1 = fileContentsUnunicoded.replace(".deleteExpando",".replaceLaterExpando");
