@@ -1,4 +1,4 @@
-_**garble** is a python3 tool that takes javascript obfuscation to the extreme._
+_**PY3garble** is a python3 tool that takes javascript obfuscation to the extreme._
 SAME AS THE ORIGINAL JUST FOR PYTHON3
 
 ###Why should I use garble ?
