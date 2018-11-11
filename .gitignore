@@ -168,3 +168,9 @@ pip-log.txt
 ## NodeJS
 #############
 node_modules/*
+
+#############
+## My scripts
+#############
+src/index.js
+src/index.old.js

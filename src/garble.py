@@ -2,12 +2,27 @@
 
 import gzip
 import sys
+from jsmin import jsmin
 
 import unidecode
-from slimit import minify
+
+COMPRESS_OBJ = {
+    "yes": True,
+    "no": False
+}
 
 
-def garble(inputPath, outputPath, compress):
+class GarbleException(Exception):
+    pass
+
+
+def garble(input_path, output_path, compress=False):
+    """
+    Function garble the JS to the Extreme
+       :param input_path: Path of the input JS to garble
+       :param output_path: Path of the garbled JS
+       :param compress: yes or no describing if conversion needed or not
+    """
     # letters / numbers
     symbols = {
         'a': '((!!+[]+"")[+!![]])',
@@ -93,6 +108,7 @@ def garble(inputPath, outputPath, compress):
         "^": "'^'",
         "&": "'&'",
         "~": "'~'",
+        "\n": "'\\n'",
         "\\": "'\\\\'",
         "0": "(+[])",
         "1": "(+!![])",
@@ -106,21 +122,21 @@ def garble(inputPath, outputPath, compress):
         "9": "((+!![])+(+!![])+(+!![])+(+!![])+(+!![])+(+!![])+(+!![])+(+!![])+(+!![]))"
     }
 
-    fileContents = open(inputPath, 'r').read()
+    file_contents = open(input_path, 'r').read()
 
-    fileContentsUnicoded = str(fileContents)
-    fileContentsUnunicoded = unidecode.unidecode(fileContentsUnicoded)
+    file_contents_unicoded = str(file_contents)
+    file_contents_ununicoded = unidecode.unidecode(file_contents_unicoded)
 
-    replacedReserved1 = fileContentsUnunicoded.replace(".deleteExpando", ".replaceLaterExpando");
-    replacedReserved2 = replacedReserved1.replace(".delete", "['delete']");
-    replacedReserved3 = replacedReserved2.replace(".replaceLaterExpando", ".deleteExpando");
-    replacedReserved4 = replacedReserved3.replace(".catch", "['catch']");
+    replaced_reserved_1 = file_contents_ununicoded.replace(".deleteExpando", ".replaceLaterExpando");
+    replaced_reserved_2 = replaced_reserved_1.replace(".delete", "['delete']");
+    replaced_reserved_3 = replaced_reserved_2.replace(".replaceLaterExpando", ".deleteExpando");
+    replaced_reserved_4 = replaced_reserved_3.replace(".catch", "['catch']");
 
-    minified = minify(replacedReserved4, mangle=False, mangle_toplevel=False)
+    minified = jsmin(replaced_reserved_4, quote_chars="'\"`")
 
     transformed = []
-    outputFile = open(outputPath, 'w+')
-    outputFile.write(
+    output_file = open(output_path, 'w+')
+    output_file.write(
         "[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]][([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([][[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]](")
 
     for i in range(len(minified)):
@@ -130,13 +146,13 @@ def garble(inputPath, outputPath, compress):
             transformed.append(symbols[minified[i]])
         else:
             transformed.append(symbols[minified[i]] + "+")
-    outputFile.write("".join(transformed))
-    outputFile.write(")()")
-    outputFile.close()
+    output_file.write("".join(transformed))
+    output_file.write(")()")
+    output_file.close()
 
-    if compress.lower() == "yes":
-        f_in = open(outputPath, 'rb')
-        f_out = gzip.open(outputPath + ".gz", 'wb')
+    if compress is False:
+        f_in = open(output_path, 'rb')
+        f_out = gzip.open(output_path + ".gz", 'wb')
         f_out.writelines(f_in)
         f_out.close()
         f_in.close()
@@ -145,9 +161,10 @@ def garble(inputPath, outputPath, compress):
 if __name__ == "__main__":
     # execute only if run as a script
     if len(sys.argv) < 3:
-        print("please specify an input and output and if you would like to use compression.")
-        quit()
-    inputPath = sys.argv[1]
-    outputPath = sys.argv[2]
-    compress = sys.argv[3]
-    garble(inputPath, outputPath, compress)
+        raise GarbleException(
+            "please specify an input file, output file and if yes or no you would like to use compression.")
+    try:
+        garble(sys.argv[1], sys.argv[2], COMPRESS_OBJ[sys.argv[3]])
+    except KeyError:
+        raise GarbleException("third argument for compression must be yes or no")
+
