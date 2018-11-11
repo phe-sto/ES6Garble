@@ -1,6 +1,6 @@
 ## JavaScript Obfuscation
 
-_**garble**_ is a python3 tool that takes javascript obfuscation to the extreme.
+_**ES6Garble**_ is a python3 tool that takes javascript obfuscation to the extreme.
 Quite similar to the original [garble](https://github.com/adamyork/garble) but in python and using jsmin instead of slimit not handling ES6. The *garble.py* 
 has now a garble function and therefore can be used not only in command line but in a python script i.e ```from garble import garble```.
 
