@@ -174,3 +174,11 @@ node_modules/*
 #############
 src/index.js
 src/index.old.js
+
+#############
+## Tests
+############
+samples/garbled/*
+samples/garbled/
+test/results/*
+test/results/
